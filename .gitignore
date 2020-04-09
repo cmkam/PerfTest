@@ -3,4 +3,7 @@ conf/application.properties
 .DS_Store
 target/*
 
-results/.keep
+user-files/resources/dbb/id/*
+results/*
+.idea/*
+*/.idea/*
