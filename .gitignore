@@ -1,0 +1,6 @@
+
+conf/application.properties
+.DS_Store
+target/*
+
+results/.keep
