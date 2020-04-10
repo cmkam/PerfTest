@@ -1109,7 +1109,7 @@ class DBBLandingV2 extends Simulation {
 		group("start"){start}, 
 		group("next"){next}, 
 		group("logon"){logon.pause(5)}, 
-		group("refresh"){repeat(3){dbb.DBBLandingRefresh.refresh.pause(60)}},
+		group("refresh"){repeat(15){dbb.DBBLandingRefresh.refresh.pause(120)}},
 		group("logout"){logout})}
 	//setUp(scn.inject(atOnceUsers(1))).protocols(httpProtocol)
 	//val scn = scenario("DbbR6V1WC2V2").repeat(1){exec(start,next,logon)}
@@ -1118,7 +1118,7 @@ class DBBLandingV2 extends Simulation {
 
 //atOnceUsers(1)
 	//setUp(scn.inject(rampUsers(50) during(2 minutes))).protocols(httpProtocol)
-	setUp(scn.inject(rampUsers(5) during(30 seconds))).protocols(httpProtocol)
+	setUp(scn.inject(rampUsers(800) during(30 minutes))).protocols(httpProtocol).maxDuration(40 minutes)
 
 
 }
