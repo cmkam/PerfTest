@@ -15,7 +15,7 @@ class DBBLandingV2 extends Simulation {
 
 	val httpProtocol = http
 		.baseUrl(baseUrl)
-		.inferHtmlResources(WhiteList("""https://.*.hsbc.com..*/.*"""), BlackList())
+		//.inferHtmlResources(WhiteList("""https://.*.hsbc.com..*/.*"""), BlackList())
 		.acceptHeader("application/x-es-module, */*")
 		.acceptEncodingHeader("gzip, deflate")
 		.acceptLanguageHeader("zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7,zh-CN;q=0.6,ja;q=0.5")
@@ -49,7 +49,8 @@ class DBBLandingV2 extends Simulation {
 		"Sec-Fetch-Dest" -> "empty",
 		"Sec-Fetch-Mode" -> "cors",
 		"Sec-Fetch-Site" -> "same-origin",
-		"X-BBXSRF" -> "c9bbbdf6-2709-43c7-b286-8e97670d213f")
+		//"X-BBXSRF" -> "c9bbbdf6-2709-43c7-b286-8e97670d213f")
+		"X-BBXSRF" -> "${DBBHK_BBXSRF}")
 
 	val headers_7 = Map(
 		"Accept" -> "application/json",
@@ -57,7 +58,8 @@ class DBBLandingV2 extends Simulation {
 		"Sec-Fetch-Dest" -> "empty",
 		"Sec-Fetch-Mode" -> "cors",
 		"Sec-Fetch-Site" -> "same-origin",
-		"X-BBXSRF" -> "c9bbbdf6-2709-43c7-b286-8e97670d213f",
+		//"X-BBXSRF" -> "c9bbbdf6-2709-43c7-b286-8e97670d213f",
+		"X-BBXSRF" -> "${DBBHK_BBXSRF}",
 		"fromRoute" -> "wechat")
 
 	val headers_9 = Map(
@@ -74,7 +76,8 @@ class DBBLandingV2 extends Simulation {
 		"Sec-Fetch-Dest" -> "empty",
 		"Sec-Fetch-Mode" -> "cors",
 		"Sec-Fetch-Site" -> "same-origin",
-		"X-BBXSRF" -> "c9bbbdf6-2709-43c7-b286-8e97670d213f")
+		//"X-BBXSRF" -> "c9bbbdf6-2709-43c7-b286-8e97670d213f")
+		"X-BBXSRF" -> "${DBBHK_BBXSRF}")
 
 	val headers_13 = Map(
 		"Accept" -> "image/webp,image/apng,image/*,*/*;q=0.8",
@@ -159,14 +162,16 @@ class DBBLandingV2 extends Simulation {
 		"Sec-Fetch-Dest" -> "empty",
 		"Sec-Fetch-Mode" -> "cors",
 		"Sec-Fetch-Site" -> "same-origin",
-		"X-BBXSRF" -> "61207e84-1b72-4e83-b638-b5cba9444e5c")
+		//"X-BBXSRF" -> "61207e84-1b72-4e83-b638-b5cba9444e5c")
+		"X-BBXSRF" -> "${DBBHK_BBXSRF}")
 
 	val headers_260 = Map(
 		"Accept" -> "application/json, text/plain, */*",
 		"Sec-Fetch-Dest" -> "empty",
 		"Sec-Fetch-Mode" -> "cors",
 		"Sec-Fetch-Site" -> "same-origin",
-		"X-BBXSRF" -> "61207e84-1b72-4e83-b638-b5cba9444e5c")
+		//"X-BBXSRF" -> "61207e84-1b72-4e83-b638-b5cba9444e5c")
+		"X-BBXSRF" -> "${DBBHK_BBXSRF}")
 
 	val headers_268 = Map(
 		"ADRUM" -> "isAjax:true",
@@ -176,7 +181,8 @@ class DBBLandingV2 extends Simulation {
 		"Sec-Fetch-Dest" -> "empty",
 		"Sec-Fetch-Mode" -> "cors",
 		"Sec-Fetch-Site" -> "same-origin",
-		"X-BBXSRF" -> "61207e84-1b72-4e83-b638-b5cba9444e5c")
+		//"X-BBXSRF" -> "61207e84-1b72-4e83-b638-b5cba9444e5c")
+		"X-BBXSRF" -> "${DBBHK_BBXSRF}")
 
 	val headers_271 = Map(
 		"ADRUM" -> "isAjax:true",
@@ -191,18 +197,21 @@ class DBBLandingV2 extends Simulation {
 		"Sec-Fetch-Dest" -> "empty",
 		"Sec-Fetch-Mode" -> "cors",
 		"Sec-Fetch-Site" -> "same-origin",
-		"X-BBXSRF" -> "985d330d-0036-41f8-b889-c51d5b480e8c")
+		//"X-BBXSRF" -> "985d330d-0036-41f8-b889-c51d5b480e8c")
+		"X-BBXSRF" -> "${DBBHK_BBXSRF}")
 
 
 
-	val scn = scenario("DBBLandingV2")
+	val start = exec{ session =>
+		  //println(session)
+		  session}
 		.exec(http("request_0")
-			.get("/portalserver/logon")
+			.get("/portalserver/logon").check( header("X-BBXSRF").saveAs("DBBHK_BBXSRF"))
 			.headers(headers_0)
 			.resources(http("request_1")
 			.post("/portalserver/services/rest/logon/config")
 			.headers(headers_1)))
-		.pause(1)
+		//.pause(1)
 		.exec(http("request_2")
 			.get("/portalserver%2Fstatic%2Ffeatures%2F%5BBBHOST%5D%2Fhsbc-config%2Fversion.json?ver=1586432337956")
 			.headers(headers_2)
@@ -218,21 +227,21 @@ class DBBLandingV2 extends Simulation {
             http("request_6")
 			.get("/portalserver/services/rest/publicResource?fileName=iphone-mapping.json&ver=1584584688759")
 			.headers(headers_2),
-            http("request_7")
-			.post("/portalserver/j_spring_security_logout?portalName=gbbportal")
-			.headers(headers_7),
+            //http("request_7")
+			//.post("/portalserver/j_spring_security_logout?portalName=gbbportal")
+			//.headers(headers_7),
             http("request_8")
 			.get("/portalserver/services/rest/publicResource?fileName=username-rPanel-en-US.html&ver=1584584688759")
 			.headers(headers_2),
             http("request_9")
 			.get("/portalserver/static/idv-logon/assets/hsbc.png?ver=1579169225104")
 			.headers(headers_9)))
-		.pause(53)
+		//.pause(53)
 		// username
-		.exec(http("request_10")
+	val next = exec(http("request_10")
 			.post("/portalserver/services/rest/auth/namecheck")
 			.headers(headers_10)
-			.body(RawFileBody("dbb/id/password.json"))
+			.body(RawFileBody("dbb/id/username.json"))
 			.resources(http("request_11")
 			.get("/portalserver/services/rest/publicResource?fileName=auth-rPanel-en-US.html&ver=1584584688759")
 			.headers(headers_2),
@@ -263,19 +272,20 @@ class DBBLandingV2 extends Simulation {
             http("request_20")
 			.get("/portalserver/hsbc/content/commercial/TxnBank/PWSRedesign/images/logon_googleplay.jpg")
 			.headers(headers_13)))
-		.pause(23)
+		//.pause(23)
 		// password
-		.exec(http("request_21")
-			.post("/portalserver/services/rest/auth/authenticate")
+	val logon=exec(http("request_21")
+			.post("/portalserver/services/rest/auth/authenticate")//.check( header("X-BBXSRF").saveAs("DBBHK_BBXSRF_2"))
 			.headers(headers_10)
-			.body(RawFileBody("dbb/id/username.json"))
+			.body(RawFileBody("dbb/id/password.json"))
 			.resources(http("request_22")
 			.post("/portalserver/j_spring_security_check")
 			.headers(headers_22)
 			.formParam("businessType", "dbb")
 			.formParam("redirectTarget", "/services/rest/user/profile/defaultSwitch")
 			.formParam("locale", "en_US")
-			.formParam("BBXSRF", "61207e84-1b72-4e83-b638-b5cba9444e5c"),
+			//.formParam("BBXSRF", "61207e84-1b72-4e83-b638-b5cba9444e5c"),
+			.formParam("BBXSRF", "${DBBHK_BBXSRF}"),
             http("request_23")
 			.get("/portalserver/static/templates/%5BBBHOST%5D/HsbcDemoTemplate/scripts/EUM/LL/adrum.js?v=1585554196")
 			.headers(headers_23),
@@ -423,7 +433,7 @@ class DBBLandingV2 extends Simulation {
             http("request_71")
 			.get("/portalserver/configuration/url2state/identifier")
 			.headers(headers_71)
-			.check(status.is(403)),
+			.check(status.in(403,200)),
             http("request_72")
 			.get("/portalserver/static/backbase.com.2012.aurora/css/shared.css")
 			.headers(headers_26),
@@ -988,7 +998,8 @@ class DBBLandingV2 extends Simulation {
             http("request_259")
 			.post("/portalserver/services/rest/user/profile/list")
 			.headers(headers_259)
-			.body(RawFileBody("dbb/dbblandingv2/0259_request.json")),
+			.body(RawFileBody("dbb/dbblandingv2/0259_request.json"))
+			.check(status.in(200, 302, 400)),//TODO            
             http("request_260")
 			.get("/portalserver/services/rest/api/v2/users/userId1")
 			.headers(headers_260),
@@ -1004,7 +1015,8 @@ class DBBLandingV2 extends Simulation {
             http("request_264")
 			.post("/portalserver/services/rest/messageBox/PropertiesReader?fileName=TFXRateExplainedFile&subPath=wc2%2FTFXRateExplainedPath&language=en-US")
 			.headers(headers_259)
-			.body(RawFileBody("dbb/dbblandingv2/0264_request.json")),
+			.body(RawFileBody("dbb/dbblandingv2/0264_request.json"))
+			.check(status.in(200, 302, 400)),//TODO
             http("request_265")
 			.get("/portalserver/services/rest/api/v2/insights")
 			.headers(headers_2),
@@ -1017,17 +1029,20 @@ class DBBLandingV2 extends Simulation {
             http("request_268")
 			.post("/portalserver/services/rest/messageBox/PropertiesReader?fileName=permissionLeftMenuConfig&subPath=leftmenu")
 			.headers(headers_268)
-			.body(RawFileBody("dbb/dbblandingv2/0268_request.json")),
+			.body(RawFileBody("dbb/dbblandingv2/0268_request.json"))
+			.check(status.in(200, 302, 400)),//TODO
             http("request_269")
 			.post("/portalserver/services/rest/email/list")
 			.headers(headers_259)
-			.body(RawFileBody("dbb/dbblandingv2/0269_request.json")),
+			.body(RawFileBody("dbb/dbblandingv2/0269_request.json"))
+			.check(status.in(200, 302, 400)),//TODO
             http("request_270")
 			.get("/portalserver/services/rest/api/v2/banner/campaign")
 			.headers(headers_2),
             http("request_271")
 			.get("/portalserver/portals/gbbportal.xml?pc=false")
-			.headers(headers_271),
+			.headers(headers_271)
+			.check(status.in(200, 302, 403)),//TODO
             http("request_272")
 			.get("/portalserver/services/rest/api/v2/notifications/stream")
 			.headers(headers_2),
@@ -1043,7 +1058,8 @@ class DBBLandingV2 extends Simulation {
             http("request_276")
 			.post("/portalserver/services/rest/api/v2/insight/retrieve")
 			.headers(headers_268)
-			.body(RawFileBody("dbb/dbblandingv2/0276_request.json")),
+			.body(RawFileBody("dbb/dbblandingv2/0276_request.json"))
+			.check(status.in(200, 302, 400)),//TODO
             http("request_277")
 			.get("/portalserver/services/rest/resource/campaign/image/payNoti_collapse_en.jpg")
 			.headers(headers_13),
@@ -1056,14 +1072,14 @@ class DBBLandingV2 extends Simulation {
             http("request_280")
 			.get("/portalserver/services/rest/resource/rmPhoto/43377131.jpg")
 			.headers(headers_13)
-			.check(status.is(498)),
+			.check(status.in(498, 200)),
             http("request_281")
 			.get("/portalserver/services/rest/api/v2/payments/direct-debits?currentPage=1&direction=DESC&from=0&maxNavPages=3&orderBy=date&paginationType=pagination&size=50&totalItems=0")
 			.headers(headers_2)))
-		.pause(48)
+		//.pause(120)
 		// logoff
-		.exec(http("request_282")
-			.post("/portalserver/j_spring_security_logout?portalName=gbbportal")
+		val logout=exec(http("request_282")
+			.post("/portalserver/j_spring_security_logout?portalName=gbbportal")//.check( header("X-BBXSRF").saveAs("DBBHK_BBXSRF_3"))
 			.headers(headers_22)
 			.formParam("delegate", "true")
 			.resources(http("request_283")
@@ -1088,5 +1104,21 @@ class DBBLandingV2 extends Simulation {
 			.get("/portalserver/services/rest/locale/update?lang=en_US")
 			.headers(headers_2)))
 
-	setUp(scn.inject(atOnceUsers(1))).protocols(httpProtocol)
+	
+	val scn = scenario("DBBLandingV2").repeat(1){exec(
+		group("start"){start}, 
+		group("next"){next}, 
+		group("logon"){logon.pause(5)}, 
+		group("refresh"){repeat(3){dbb.DBBLandingRefresh.refresh.pause(60)}},
+		group("logout"){logout})}
+	//setUp(scn.inject(atOnceUsers(1))).protocols(httpProtocol)
+	//val scn = scenario("DbbR6V1WC2V2").repeat(1){exec(start,next,logon)}
+//rampUsers(1280) during(10 minutes)
+
+
+//atOnceUsers(1)
+	//setUp(scn.inject(rampUsers(50) during(2 minutes))).protocols(httpProtocol)
+	setUp(scn.inject(rampUsers(5) during(30 seconds))).protocols(httpProtocol)
+
+
 }
