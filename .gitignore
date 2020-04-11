@@ -8,3 +8,5 @@ results/*
 .idea/*
 */.idea/*
 bin/log/*
+dbbResult/*
+dbbResult/!*.zip
