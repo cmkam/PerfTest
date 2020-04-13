@@ -1104,16 +1104,6 @@ class DBBLandingV2 extends Simulation {
 			.get("/portalserver/services/rest/locale/update?lang=en_US")
 			.headers(headers_2)))
 
-		/** one user 
-		val scn = scenario("DBBLandingV2").repeat(1){exec(
-			group("start"){start}, 
-			group("next"){next}, 
-			group("logon"){logon.pause(1)}, 
-			group("refresh"){repeat(1){dbb.DBBLandingRefresh.refresh.pause(1)}},
-			group("logout"){logout})}
-	    
-	    setUp(scn.inject(atOnceUsers(1))).protocols(httpProtocol);
-	    */
 
 	    /** 40 min 900 user */
 		val scn = scenario("DBBLandingV2").repeat(1){exec(
