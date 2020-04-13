@@ -275,7 +275,7 @@ class DBBLandingV2 extends Simulation {
 		//.pause(23)
 		// password
 	val logon=exec(http("request_21")
-			.post("/portalserver/services/rest/auth/authenticate")//.check( header("X-BBXSRF").saveAs("DBBHK_BBXSRF_2"))
+			.post("/portalserver/services/rest/auth/authenticate")//.check( header("X-BBXSRF").saveAs("DBBHK_BBXSRF"))
 			.headers(headers_10)
 			.body(RawFileBody("dbb/id/password.json"))
 			.resources(http("request_22")
@@ -1104,21 +1104,40 @@ class DBBLandingV2 extends Simulation {
 			.get("/portalserver/services/rest/locale/update?lang=en_US")
 			.headers(headers_2)))
 
+		/** one user 
+		val scn = scenario("DBBLandingV2").repeat(1){exec(
+			group("start"){start}, 
+			group("next"){next}, 
+			group("logon"){logon.pause(1)}, 
+			group("refresh"){repeat(1){dbb.DBBLandingRefresh.refresh.pause(1)}},
+			group("logout"){logout})}
+	    
+	    setUp(scn.inject(atOnceUsers(1))).protocols(httpProtocol);
+	    */
+
+	    /** 40 min 900 user */
+		val scn = scenario("DBBLandingV2").repeat(1){exec(
+			group("start"){start}, 
+			group("next"){next}, 
+			group("logon"){logon.pause(1)},
+			group("refresh"){forever() { dbb.DBBLandingRefresh.refresh.pause(60, 180)}}
+			//,group("logout"){logout})
+			)}
+	    
+	    //setUp(scn.inject(rampUsers(800) during(40 minutes))).protocols(httpProtocol).maxDuration(50 minutes)
+	    setUp(scn.inject(rampUsers(800) during(5 minutes))).protocols(httpProtocol).maxDuration(10 minutes)
+		/**/
+
 	
-	val scn = scenario("DBBLandingV2").repeat(1){exec(
-		group("start"){start}, 
-		group("next"){next}, 
-		group("logon"){logon.pause(5)}, 
-		group("refresh"){repeat(15){dbb.DBBLandingRefresh.refresh.pause(120)}},
-		group("logout"){logout})}
 	//setUp(scn.inject(atOnceUsers(1))).protocols(httpProtocol)
 	//val scn = scenario("DbbR6V1WC2V2").repeat(1){exec(start,next,logon)}
-//rampUsers(1280) during(10 minutes)
+    //rampUsers(1280) during(10 minutes)
 
 
-//atOnceUsers(1)
+    
+
 	//setUp(scn.inject(rampUsers(50) during(2 minutes))).protocols(httpProtocol)
-	setUp(scn.inject(rampUsers(800) during(30 minutes))).protocols(httpProtocol).maxDuration(40 minutes)
+	//setUp(scn.inject(rampUsers(800) during(30 minutes))).protocols(httpProtocol).maxDuration(40 minutes)
 
 
 }
